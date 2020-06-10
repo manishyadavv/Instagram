@@ -8,6 +8,16 @@ const {MONGOURI} = require('./keys')
 
 require('./models/user')
 
+//we want all the incoming req and
+// pass through the json
+//order of app.use matter
+//
+app.use(express.json())
+app.use(require("./routes/auth"))
+
+
+
+
 mongoose.connect(MONGOURI,{
     useNewUrlParser: true,
         useUnifiedTopology: true
