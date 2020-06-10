@@ -5,9 +5,12 @@ const mongoose= require ('mongoose')
 
 const User = mongoose.model('User')
 
-router.get("/",(req,res)=>{
-    res.send("hello")
-})
+const bcrypt = require('bcryptjs')
+//
+// router.get("/",(req,res)=>{
+//     res.send("hello")
+// })
+
 
 //signup route
 router.post('/signup',(req,res)=>{
@@ -25,24 +28,28 @@ router.post('/signup',(req,res)=>{
             if(savedUser){
                 return res.status(422).json({error:"user already exists"})
             }
+            bcrypt.hash(password,12)
+                .then(hashedpassword=>{
+                    const user= new User({
+                        email:email,
+                        password:hashedpassword,
+                        name:name
+                    })
+                    user.save()
+                        .then(user=>{
+                            res.json({message:"saved successfulyy"})
+                        })
+                        .catch(err=>{
+                            console.log(err)
 
-            const user= new User({
-                email:email,
-                password:password,
-                name:name
-            })
-            user.save()
-                .then(user=>{
-                    res.json({message:"saved successfulyy"})
+                        })
                 })
                 .catch(err=>{
                     console.log(err)
-
                 })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
+                })
+
+
 
 })
 
